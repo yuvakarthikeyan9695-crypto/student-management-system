@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Examination - Student Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .exam-container { max-width: 800px; width: 100%; margin: 30px auto; padding: 32px; }
+        .question-card { background: rgba(6,35,84,0.5); border: 1px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: left; }
+        .question-title { font-size: 15.5px; font-weight: 700; color: #facc15; margin-bottom: 12px; }
+        .option-label { display: flex; align-items: center; gap: 10px; margin: 10px 0; font-size: 14.5px; cursor: pointer; color: #e2e8f0; padding: 8px 12px; border-radius: 6px; transition: background 0.2s; }
+        .option-label:hover { background: rgba(59,130,246,0.15); }
+        .option-label input { cursor: pointer; transform: scale(1.15); }
+        .timer-badge { display: inline-block; background: #dc2626; color: #fff; padding: 6px 14px; border-radius: 20px; font-weight: 700; font-size: 13.5px; margin-bottom: 16px; }
+        .result-box { display: none; background: rgba(22,101,52,0.35); border: 1.5px solid #22c55e; border-radius: 14px; padding: 26px; text-align: center; margin-bottom: 24px; }
+        .result-score { font-size: 34px; font-weight: 900; color: #facc15; margin: 12px 0; }
+    </style>
+</head>
+<body style="justify-content: flex-start;">
+
+    <main class="card-box exam-container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <svg class="logo-cap" viewBox="0 0 100 80">
+                <polygon points="50,12 92,30 50,46 8,30" fill="#3b82f6" />
+                <polygon points="50,16 88,30 50,43 12,30" fill="#60a5fa" opacity="0.6"/>
+                <path d="M26 38 V50 C26 58 74 58 74 50 V38" fill="#1d4ed8"/>
+                <circle cx="50" cy="29" r="3.5" fill="#facc15"/>
+                <path d="M50 29 Q72 32 75 44" stroke="#facc15" stroke-width="2.5" fill="none"/>
+                <rect x="73" y="44" width="4.5" height="9" rx="1.5" fill="#facc15"/>
+            </svg>
+        </div>
+
+        <h1 class="title-yellow">Online Examination</h1>
+        <h2 class="subtitle-white">Web Technology & Java Programming</h2>
+        <div class="yellow-divider-small"></div>
+
+        <div class="timer-badge">⏱ Exam Timer: <span id="timerText">10:00</span></div>
+
+        <!-- Result Box -->
+        <div id="resultBox" class="result-box">
+            <h2 style="color: #86efac; font-size: 22px;">Examination Completed!</h2>
+            <p style="color: #cbd5e1; margin-top: 6px;">Student Roll No: <strong id="resRoll" style="color:#fff;"></strong></p>
+            <div id="resScore" class="result-score">0 / 4 (0%)</div>
+            <p id="resStatus" style="font-size: 17px; font-weight: 700;"></p>
+            <button onclick="retakeExam()" class="btn-primary" style="display:inline-block; width:auto; padding:10px 24px; margin-top:16px;">Retake Examination</button>
+        </div>
+
+        <!-- Exam Form -->
+        <form id="examForm" onsubmit="submitExam(event)">
+            <div style="margin-bottom: 20px; text-align: left;">
+                <label style="font-weight: 600; color: #facc15; font-size: 14px;">Select or Enter Student Roll Number:</label>
+                <input type="text" id="rollNumber" class="form-control" value="CS101" required style="margin-top: 6px;">
+            </div>
+
+            <!-- Q1 -->
+            <div class="question-card">
+                <div class="question-title">1. Which protocol is primarily used to browse web pages?</div>
+                <label class="option-label"><input type="radio" name="q1" value="A" required> A) FTP (File Transfer Protocol)</label>
+                <label class="option-label"><input type="radio" name="q1" value="B"> B) HTTP / HTTPS (Hypertext Transfer Protocol)</label>
+                <label class="option-label"><input type="radio" name="q1" value="C"> C) SMTP (Simple Mail Transfer Protocol)</label>
+                <label class="option-label"><input type="radio" name="q1" value="D"> D) SNMP (Simple Network Management Protocol)</label>
+            </div>
+
+            <!-- Q2 -->
+            <div class="question-card">
+                <div class="question-title">2. In Java Servlet lifecycle, which method executes only once when initialized?</div>
+                <label class="option-label"><input type="radio" name="q2" value="A" required> A) init()</label>
+                <label class="option-label"><input type="radio" name="q2" value="B"> B) service()</label>
+                <label class="option-label"><input type="radio" name="q2" value="C"> C) doGet()</label>
+                <label class="option-label"><input type="radio" name="q2" value="D"> D) destroy()</label>
+            </div>
+
+            <!-- Q3 -->
+            <div class="question-card">
+                <div class="question-title">3. Which technology is used to define and validate rules and schemas for XML documents?</div>
+                <label class="option-label"><input type="radio" name="q3" value="A" required> A) CSS Stylesheet</label>
+                <label class="option-label"><input type="radio" name="q3" value="B"> B) JavaScript JSON</label>
+                <label class="option-label"><input type="radio" name="q3" value="C"> C) XML Schema Definition (XSD)</label>
+                <label class="option-label"><input type="radio" name="q3" value="D"> D) Java Applet</label>
+            </div>
+
+            <!-- Q4 -->
+            <div class="question-card">
+                <div class="question-title">4. Which object is used in Java Servlets to perform Session Tracking across requests?</div>
+                <label class="option-label"><input type="radio" name="q4" value="A" required> A) HttpServletRequest</label>
+                <label class="option-label"><input type="radio" name="q4" value="B"> B) HttpSession</label>
+                <label class="option-label"><input type="radio" name="q4" value="C"> C) ServletConfig</label>
+                <label class="option-label"><input type="radio" name="q4" value="D"> D) ServletContext</label>
+            </div>
+
+            <div class="action-row" style="margin-top: 24px;">
+                <a href="index.html" class="btn-back">&larr; Back to Home</a>
+                <button type="submit" class="btn-reg">Submit Exam & Evaluate</button>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        // Countdown timer
+        let timeLeft = 600;
+        const timerEl = document.getElementById('timerText');
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            const mins = Math.floor(timeLeft / 60);
+            const secs = timeLeft % 60;
+            timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                submitExam(new Event('submit'));
+            }
+        }, 1000);
+
+        function submitExam(e) {
+            if (e && e.preventDefault) e.preventDefault();
+            clearInterval(timerInterval);
+
+            const roll = document.getElementById('rollNumber').value.trim();
+            const q1 = document.querySelector('input[name="q1"]:checked')?.value;
+            const q2 = document.querySelector('input[name="q2"]:checked')?.value;
+            const q3 = document.querySelector('input[name="q3"]:checked')?.value;
+            const q4 = document.querySelector('input[name="q4"]:checked')?.value;
+
+            let score = 0;
+            if (q1 === 'B') score++;
+            if (q2 === 'A') score++;
+            if (q3 === 'C') score++;
+            if (q4 === 'B') score++;
+
+            const pct = (score / 4) * 100;
+            const isPass = pct >= 50;
+
+            document.getElementById('resRoll').textContent = roll;
+            document.getElementById('resScore').textContent = `${score} / 4 (${pct.toFixed(0)}%)`;
+            
+            const resStatus = document.getElementById('resStatus');
+            resStatus.textContent = isPass ? "Result: PASSED (First Class)" : "Result: FAILED (Needs Reappearance)";
+            resStatus.style.color = isPass ? "#86efac" : "#f87171";
+
+            document.getElementById('examForm').style.display = 'none';
+            document.getElementById('resultBox').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function retakeExam() {
+            document.getElementById('examForm').reset();
+            document.getElementById('examForm').style.display = 'block';
+            document.getElementById('resultBox').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

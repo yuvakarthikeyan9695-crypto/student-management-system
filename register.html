@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Student Account - Student Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="card-box register-card">
+        <!-- Graduation Cap Logo -->
+        <div class="logo-container">
+            <svg class="logo-cap" viewBox="0 0 100 80">
+                <polygon points="50,12 92,30 50,46 8,30" fill="#3b82f6" />
+                <polygon points="50,16 88,30 50,43 12,30" fill="#60a5fa" opacity="0.6"/>
+                <path d="M26 38 V50 C26 58 74 58 74 50 V38" fill="#1d4ed8"/>
+                <circle cx="50" cy="29" r="3.5" fill="#facc15"/>
+                <path d="M50 29 Q72 32 75 44" stroke="#facc15" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <rect x="73" y="44" width="4.5" height="9" rx="1.5" fill="#facc15"/>
+            </svg>
+        </div>
+
+        <!-- Titles -->
+        <h1 class="title-yellow">Student Management</h1>
+        <h2 class="subtitle-white">Create Student Account</h2>
+
+        <!-- Yellow Divider -->
+        <div class="yellow-divider-small"></div>
+
+        <!-- Registration Form -->
+        <form id="studentForm">
+            <div class="form-grid">
+                <!-- Left Column -->
+                <div class="form-group">
+                    <label for="studentName">Student Name</label>
+                    <input type="text" id="studentName" class="form-control" placeholder="Arun" required>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-group">
+                    <label for="studentEmail">Email</label>
+                    <input type="email" id="studentEmail" class="form-control" placeholder="arun@gmail.com" required>
+                </div>
+
+                <!-- Left Column -->
+                <div class="form-group">
+                    <label for="rollNumber">Roll Number</label>
+                    <input type="text" id="rollNumber" class="form-control" placeholder="CS101" required>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-group">
+                    <label for="studentPassword">Password</label>
+                    <input type="password" id="studentPassword" class="form-control" placeholder="•••••••" required>
+                </div>
+
+                <!-- Left Column -->
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <select id="department" class="form-control" required>
+                        <option value="CSE">CSE</option>
+                        <option value="ECE">ECE</option>
+                        <option value="IT">IT</option>
+                        <option value="ME">ME</option>
+                        <option value="CE">CE</option>
+                        <option value="EEE">EEE</option>
+                    </select>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-control" placeholder="•••••••" required>
+                </div>
+
+                <!-- Left Column -->
+                <div class="form-group">
+                    <label for="mobileNumber">Mobile Number</label>
+                    <input type="tel" id="mobileNumber" class="form-control" placeholder="9876543210" required>
+                </div>
+            </div>
+
+            <!-- Success Notification Message -->
+            <div id="successMsg" class="success-banner"></div>
+
+            <!-- Buttons: Back to Home & Register Student side-by-side -->
+            <div class="action-row" style="margin-top: 12px;">
+                <a href="index.html" class="btn-back">&larr; Back to Home</a>
+                <button type="submit" class="btn-reg" style="border: none;">Register Student</button>
+            </div>
+        </form>
+
+        <!-- View Students Link -->
+        <p class="link-helper" style="margin-top: 18px;">
+            Already registered? <a href="details.html" class="link-yellow">View Students</a>
+        </p>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        const form = document.getElementById('studentForm');
+        const successMsg = document.getElementById('successMsg');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('studentName').value.trim();
+            const email = document.getElementById('studentEmail').value.trim();
+            const roll = document.getElementById('rollNumber').value.trim();
+            const password = document.getElementById('studentPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const dept = document.getElementById('department').value;
+            const mobile = document.getElementById('mobileNumber').value.trim();
+
+            if (password !== confirmPassword) {
+                successMsg.style.color = '#ef4444';
+                successMsg.textContent = 'Passwords do not match!';
+                return;
+            }
+
+            const students = getStudents();
+            const newStudent = {
+                id: Date.now(),
+                name: name,
+                roll: roll,
+                dept: dept,
+                mobile: mobile,
+                email: email,
+                password: '••••••',
+                confirmPassword: '••••••',
+                dateTime: formatCurrentDateTime()
+            };
+
+            students.push(newStudent);
+            saveStudents(students);
+
+            successMsg.style.color = '#f6c000';
+            successMsg.textContent = 'Student Registered Successfully!';
+
+            form.reset();
+
+            // After 1.5 seconds, user can view updated students
+            setTimeout(() => {
+                successMsg.textContent = 'Student Registered Successfully!';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

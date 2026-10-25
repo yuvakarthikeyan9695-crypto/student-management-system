@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management - Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="card-box home-card">
+        <!-- Graduation Cap Logo -->
+        <div class="logo-container">
+            <svg class="logo-cap" viewBox="0 0 100 80">
+                <!-- Cap Top / Mortarboard -->
+                <polygon points="50,12 92,30 50,46 8,30" fill="#3b82f6" />
+                <polygon points="50,16 88,30 50,43 12,30" fill="#60a5fa" opacity="0.6"/>
+                <!-- Skullcap Headband -->
+                <path d="M26 38 V50 C26 58 74 58 74 50 V38" fill="#1d4ed8"/>
+                <!-- Yellow Tassel and Button -->
+                <circle cx="50" cy="29" r="3.5" fill="#facc15"/>
+                <path d="M50 29 Q72 32 75 44" stroke="#facc15" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                <rect x="73" y="44" width="4.5" height="9" rx="1.5" fill="#facc15"/>
+            </svg>
+        </div>
+
+        <!-- System Titles -->
+        <h1 class="title-yellow">Student Management</h1>
+        <h2 class="subtitle-white">System</h2>
+
+        <!-- Yellow Divider -->
+        <div class="yellow-divider-small"></div>
+
+        <!-- Navigation Buttons -->
+        <div class="button-group">
+            <a href="register.html" class="btn-primary">Student Registration</a>
+            <a href="details.html" class="btn-primary">Registered Student Details</a>
+        </div>
+
+        <!-- Side-by-side / Back to Home navigation -->
+        <div class="action-row" style="margin-top: 10px;">
+            <a href="index.html" class="btn-back">&larr; Back to Home</a>
+        </div>
+
+        <!-- Yellow Divider Line -->
+        <div class="yellow-divider-line" style="width: 55px; margin: 20px auto 14px auto;"></div>
+
+        <!-- Bottom Caption -->
+        <p class="footer-text">Student Management System</p>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        getStudents();
+    </script>
+</body>
+</html>

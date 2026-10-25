@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks Records - Student Management System</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #f1f5f9; color: #1e293b; min-height: 100vh; }
+        .navbar { background: linear-gradient(90deg, #185a9d 0%, #20639b 100%); color: white; padding: 14px 28px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12); }
+        .nav-brand { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 700; color: white; text-decoration: none; }
+        .nav-brand svg { width: 28px; height: 28px; fill: white; }
+        .nav-home { display: flex; align-items: center; gap: 8px; color: #f8fafc; text-decoration: none; font-size: 15px; font-weight: 500; padding: 6px 14px; border-radius: 6px; background: rgba(255, 255, 255, 0.15); transition: 0.2s; }
+        .nav-home:hover { background: rgba(255, 255, 255, 0.25); }
+        .main-container { max-width: 1100px; width: 92%; margin: 36px auto; }
+        .content-box { background: #ffffff; border-radius: 14px; border: 1px solid #e2e8f0; box-shadow: 0 4px 16px rgba(0,0,0,0.04); padding: 30px; }
+        .page-header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+        .page-header-icon { width: 44px; height: 44px; border-radius: 10px; background-color: #fff1f2; display: flex; align-items: center; justify-content: center; }
+        .page-title { font-size: 22px; font-weight: 700; color: #0f172a; }
+        
+        /* Filter Bar */
+        .filter-bar { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        .filter-input { padding: 9px 14px; border-radius: 6px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; }
+        .filter-input:focus { border-color: #3b82f6; }
+        
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14.5px; }
+        .data-table th { background-color: #eaf2fb; color: #1e3a5f; font-weight: 700; padding: 13px 16px; border: 1px solid #d4e2f0; text-align: center; }
+        .data-table td { padding: 12px 16px; border: 1px solid #e2e8f0; color: #334155; text-align: center; }
+        .data-table tbody tr:nth-child(even) { background-color: #fcfdfe; }
+        .data-table tbody tr:hover { background-color: #f0f7ff; }
+        .badge-distinction { background-color: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
+        .badge-first { background-color: #e0f2fe; color: #0369a1; padding: 4px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
+        .back-link-wrapper { margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+        .back-btn { display: inline-flex; align-items: center; gap: 8px; color: #185a9d; text-decoration: none; font-weight: 600; font-size: 15px; padding: 8px 16px; border-radius: 8px; background-color: #eaf3fc; transition: all 0.2s ease; border: none; cursor: pointer; }
+        .back-btn:hover { background-color: #dbeafe; transform: translateX(-4px); }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <a href="index.html" class="nav-brand">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18C5 19.94 8.13 22 12 22C15.87 22 19 19.94 19 17.18V13.18L12 17L5 13.18Z"/>
+            </svg>
+            Student Management System
+        </a>
+        <a href="index.html" class="nav-home">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Home
+        </a>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-container">
+        <div class="content-box">
+            
+            <div class="page-header" style="justify-content: space-between; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 14px;">
+                    <div class="page-header-icon">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="#e11d48">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="page-title">Marks Records</h1>
+                        <p style="font-size:13px; color:#64748b;">Academic Performance, Grades &amp; Percentage</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;">
+                    <a href="xml_view.html" class="back-btn" style="background:#f3e8ff; color:#6b21a8; font-size:13.5px;">📄 XML &amp; XSLT View</a>
+                    <a href="marklist.jsp" class="back-btn" style="background:#e0f2fe; color:#0369a1; font-size:13.5px;">📊 Database Server (JSP)</a>
+                    <a href="exam.html" class="back-btn" style="background:#fef3c7; color:#b45309; font-size:13.5px;">📝 Online Exam</a>
+                </div>
+            </div>
+
+            <!-- Search and Action Bar -->
+            <div class="filter-bar">
+                <input type="text" id="searchInput" class="filter-input" placeholder="🔍 Search Roll No or Name..." oninput="filterMarks()" style="width: 240px;">
+                <select id="deptFilter" class="filter-input" onchange="filterMarks()">
+                    <option value="ALL">All Departments</option>
+                    <option value="CSE">CSE</option>
+                    <option value="ECE">ECE</option>
+                    <option value="IT">IT</option>
+                </select>
+                <button onclick="openAddModal()" class="back-btn" style="background:#1d72f2; color:#fff; margin-left:auto;">+ Add New Marks</button>
+                <button onclick="window.print()" class="back-btn" style="background:#f1f5f9; color:#475569;">🖨️ Print Marksheet</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Student Name</th>
+                            <th>Department</th>
+                            <th>Total Marks</th>
+                            <th>Obtained Marks</th>
+                            <th>Percentage</th>
+                            <th>Grade</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marksTableBody">
+                        <!-- Rendered dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="back-link-wrapper">
+                <a href="index.html" class="back-btn">&larr; Back to Home</a>
+                <span id="marksCountText" style="font-size:13.5px; color:#64748b; font-weight:600;"></span>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Add Marks Modal -->
+    <div id="addMarksModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:999; align-items:center; justify-content:center;">
+        <div style="background:#fff; border-radius:12px; padding:28px; max-width:440px; width:90%; box-shadow:0 10px 30px rgba(0,0,0,0.2);">
+            <h3 style="font-size:18px; color:#0f172a; margin-bottom:16px;">Add Student Marks</h3>
+            <form id="marksForm" onsubmit="saveNewMarks(event)">
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div>
+                        <label style="font-size:13px; font-weight:600;">Roll Number</label>
+                        <input type="text" id="mRoll" class="filter-input" style="width:100%; margin-top:4px;" required placeholder="e.g. 106">
+                    </div>
+                    <div>
+                        <label style="font-size:13px; font-weight:600;">Student Name</label>
+                        <input type="text" id="mName" class="filter-input" style="width:100%; margin-top:4px;" required placeholder="e.g. Sanjay">
+                    </div>
+                    <div>
+                        <label style="font-size:13px; font-weight:600;">Department</label>
+                        <select id="mDept" class="filter-input" style="width:100%; margin-top:4px;">
+                            <option value="CSE">CSE</option>
+                            <option value="ECE">ECE</option>
+                            <option value="IT">IT</option>
+                            <option value="ME">ME</option>
+                            <option value="CE">CE</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:13px; font-weight:600;">Obtained Marks (out of 600)</label>
+                        <input type="number" id="mObtained" min="0" max="600" class="filter-input" style="width:100%; margin-top:4px;" required placeholder="e.g. 520">
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button type="submit" class="back-btn" style="background:#1d72f2; color:#fff; flex:1; justify-content:center;">Save Record</button>
+                    <button type="button" onclick="closeAddModal()" class="back-btn" style="background:#e2e8f0; color:#334155; flex:1; justify-content:center;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_MARKS = [
+            { roll: "101", name: "Arun", dept: "CSE", total: 600, obtained: 540 },
+            { roll: "102", name: "Priya", dept: "ECE", total: 600, obtained: 510 },
+            { roll: "103", name: "Karthik", dept: "IT", total: 600, obtained: 570 },
+            { roll: "104", name: "Sneha", dept: "CSE", total: 600, obtained: 480 },
+            { roll: "105", name: "Vivek", dept: "ECE", total: 600, obtained: 550 }
+        ];
+
+        function getMarksData() {
+            const data = localStorage.getItem('marks_records');
+            if (!data) {
+                localStorage.setItem('marks_records', JSON.stringify(DEFAULT_MARKS));
+                return DEFAULT_MARKS;
+            }
+            try { return JSON.parse(data); } catch(e) { return DEFAULT_MARKS; }
+        }
+
+        function renderMarks(list) {
+            const tbody = document.getElementById('marksTableBody');
+            tbody.innerHTML = '';
+            document.getElementById('marksCountText').textContent = `Showing ${list.length} student records`;
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" style="padding:20px; color:#64748b;">No matching mark records found.</td></tr>`;
+                return;
+            }
+
+            list.forEach((item, index) => {
+                const pct = (item.obtained / item.total) * 100;
+                let grade = "Pass";
+                let badgeClass = "badge-first";
+                if (pct >= 90) { grade = "Distinction"; badgeClass = "badge-distinction"; }
+                else if (pct >= 80) { grade = "First Class"; badgeClass = "badge-first"; }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${item.roll}</strong></td>
+                    <td>${item.name}</td>
+                    <td>${item.dept}</td>
+                    <td>${item.total}</td>
+                    <td><strong>${item.obtained}</strong></td>
+                    <td><strong style="color:${pct >= 85 ? '#059669' : '#0284c7'};">${pct.toFixed(2)}%</strong></td>
+                    <td><span class="${badgeClass}">${grade}</span></td>
+                    <td>
+                        <button onclick="deleteMarkRecord('${item.roll}')" style="background:none; border:none; cursor:pointer; font-size:16px;" title="Delete Record">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterMarks() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const dept = document.getElementById('deptFilter').value;
+            const data = getMarksData();
+
+            const filtered = data.filter(item => {
+                const matchQuery = item.roll.toLowerCase().includes(query) || item.name.toLowerCase().includes(query);
+                const matchDept = (dept === 'ALL' || item.dept === dept);
+                return matchQuery && matchDept;
+            });
+
+            renderMarks(filtered);
+        }
+
+        function openAddModal() {
+            document.getElementById('addMarksModal').style.display = 'flex';
+        }
+
+        function closeAddModal() {
+            document.getElementById('addMarksModal').style.display = 'none';
+        }
+
+        function saveNewMarks(e) {
+            e.preventDefault();
+            const roll = document.getElementById('mRoll').value.trim();
+            const name = document.getElementById('mName').value.trim();
+            const dept = document.getElementById('mDept').value;
+            const obtained = parseInt(document.getElementById('mObtained').value);
+
+            let data = getMarksData();
+            data.push({ roll, name, dept, total: 600, obtained });
+            localStorage.setItem('marks_records', JSON.stringify(data));
+
+            closeAddModal();
+            document.getElementById('marksForm').reset();
+            filterMarks();
+        }
+
+        function deleteMarkRecord(roll) {
+            if (confirm(`Delete mark record for Roll No: ${roll}?`)) {
+                let data = getMarksData();
+                data = data.filter(item => item.roll !== roll);
+                localStorage.setItem('marks_records', JSON.stringify(data));
+                filterMarks();
+            }
+        }
+
+        filterMarks();
+    </script>
+</body>
+</html>

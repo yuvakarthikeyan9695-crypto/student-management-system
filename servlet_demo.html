@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java Servlets & Session Tracking Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .demo-container { max-width: 960px; width: 100%; margin: 30px auto; padding: 32px; }
+        .section-card { background: rgba(6,35,84,0.5); border: 1.5px solid rgba(59,130,246,0.3); border-radius: 14px; padding: 24px; margin-bottom: 24px; text-align: left; }
+        .section-title { font-size: 18px; font-weight: 700; color: #facc15; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+        .info-pill { display: inline-block; background: rgba(59,130,246,0.25); color: #93c5fd; padding: 4px 10px; border-radius: 6px; font-size: 12.5px; font-weight: 600; margin-bottom: 14px; }
+        
+        /* Execution Visualizer */
+        .servlet-output-box { display: none; background: #03112b; border: 1.5px solid #22c55e; border-radius: 12px; padding: 22px; margin-top: 20px; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(34,197,94,0.2); color: #86efac; border: 1px solid #22c55e; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 12.5px; margin-bottom: 12px; }
+        
+        .code-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(59,130,246,0.25); border-radius: 8px; padding: 14px; font-family: 'Consolas', monospace; font-size: 13px; color: #7dd3fc; margin: 12px 0; }
+        
+        .rendered-response-card { background: rgba(14,61,126,0.35); border: 1.5px solid #3b82f6; border-radius: 12px; padding: 22px; text-align: center; margin-top: 14px; }
+        .rendered-response-card table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 14px; }
+        .rendered-response-card td { padding: 9px 12px; border-bottom: 1px solid rgba(255,255,255,0.15); text-align: left; }
+        
+        /* Session Info Box */
+        .session-info { background: #03112b; border: 1.5px solid rgba(59,130,246,0.3); border-radius: 10px; padding: 18px; margin-top: 14px; font-family: monospace; font-size: 13.5px; color: #86efac; }
+        .session-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        .session-table td { padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body style="justify-content: flex-start;">
+
+    <main class="card-box demo-container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <svg class="logo-cap" viewBox="0 0 100 80">
+                <polygon points="50,12 92,30 50,46 8,30" fill="#3b82f6" />
+                <polygon points="50,16 88,30 50,43 12,30" fill="#60a5fa" opacity="0.6"/>
+                <path d="M26 38 V50 C26 58 74 58 74 50 V38" fill="#1d4ed8"/>
+                <circle cx="50" cy="29" r="3.5" fill="#facc15"/>
+                <path d="M50 29 Q72 32 75 44" stroke="#facc15" stroke-width="2.5" fill="none"/>
+                <rect x="73" y="44" width="4.5" height="9" rx="1.5" fill="#facc15"/>
+            </svg>
+        </div>
+
+        <h1 class="title-yellow">Java Servlets Lab Exercises</h1>
+        <h2 class="subtitle-white">HTML Form Invocation &amp; Session Tracking</h2>
+        <div class="yellow-divider-small"></div>
+
+        <!-- Exercise 1: Invoke Servlet from HTML Form -->
+        <div class="section-card">
+            <div class="section-title">
+                <span>1. Invoke Servlet from HTML Form</span>
+                <span class="info-pill" style="margin:0;">Servlet: RegisterServlet | Method: POST</span>
+            </div>
+            <p style="color:#cbd5e1; font-size:13.5px; margin-bottom:14px;">
+                This form submits parameters to <code>RegisterServlet</code>. When clicked, it executes <code>doPost()</code>, extracts parameters using <code>request.getParameter()</code>, and renders the dynamic HTML response!
+            </p>
+            
+            <form id="servletForm" onsubmit="handleServletSubmit(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Student Name (studentName)</label>
+                        <input type="text" id="sName" name="studentName" class="form-control" value="Arun Kumar" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Roll Number (rollNumber)</label>
+                        <input type="text" id="sRoll" name="rollNumber" class="form-control" value="CS101" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Department (department)</label>
+                        <select id="sDept" name="department" class="form-control">
+                            <option value="CSE">CSE</option>
+                            <option value="ECE">ECE</option>
+                            <option value="IT">IT</option>
+                            <option value="ME">ME</option>
+                            <option value="CE">CE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Email ID (studentEmail)</label>
+                        <input type="email" id="sEmail" name="studentEmail" class="form-control" value="arun@college.edu" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number (mobileNumber)</label>
+                        <input type="tel" id="sMobile" name="mobileNumber" class="form-control" value="9876543210" required>
+                    </div>
+                </div>
+
+                <div style="margin-top:16px;">
+                    <button type="submit" class="btn-primary" style="display:inline-flex; width:auto; padding:10px 24px;">Submit to RegisterServlet &rarr;</button>
+                </div>
+            </form>
+
+            <!-- Registration Confirmation Output (Clean Card) -->
+            <div id="servletOutput" class="servlet-output-box" style="border-color:#3b82f6; background:rgba(8,30,68,0.75);">
+                <div class="rendered-response-card" style="margin-top:0;">
+                    <h3 style="color:#f6c000; font-size:20px; margin-bottom:6px;">Registration Successful!</h3>
+                    <p style="color:#86efac; font-size:14px; font-weight:600;">Student Account Created Successfully</p>
+                    <table>
+                        <tr><td style="width:40%;"><strong>Student Name:</strong></td><td id="resCardName"></td></tr>
+                        <tr><td><strong>Roll Number:</strong></td><td id="resCardRoll"></td></tr>
+                        <tr><td><strong>Department:</strong></td><td id="resCardDept"></td></tr>
+                        <tr><td><strong>Email ID:</strong></td><td id="resCardEmail"></td></tr>
+                        <tr><td><strong>Mobile Number:</strong></td><td id="resCardMobile"></td></tr>
+                    </table>
+                    <div style="margin-top:16px; display:flex; gap:10px; justify-content:center;">
+                        <a href="details.html" class="btn-primary" style="display:inline-block; width:auto; padding:8px 18px; font-size:13px; text-decoration:none;">View in Registered Students List &rarr;</a>
+                        <button type="button" onclick="document.getElementById('servletOutput').style.display='none'" class="btn-primary" style="width:auto; padding:8px 18px; font-size:13px; background:#475569;">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercise 2: Session Tracking (HttpSession) -->
+        <div class="section-card">
+            <div class="section-title">
+                <span>2. Session Tracking (HttpSession)</span>
+                <span class="info-pill" style="margin:0;">Class: SessionTrackingServlet | Object: HttpSession</span>
+            </div>
+            <p style="color:#cbd5e1; font-size:13.5px; margin-bottom:14px;">
+                Maintains student session across multiple HTTP requests. Tracks number of visits (page hits), creation time, session ID, and allows session termination (logout).
+            </p>
+
+            <div class="session-info">
+                <table class="session-table">
+                    <tr>
+                        <td style="width:35%;"><strong>Session ID (session.getId()):</strong></td>
+                        <td><code style="color:#38bdf8;" id="sessId">JSESSIONID_84A9F201C6E</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Session Status:</strong></td>
+                        <td><span id="sessHeading" style="color:#facc15; font-weight:bold;">Welcome Back! Existing Session Found</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Creation Time:</strong></td>
+                        <td id="sessTime"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Last Accessed Time:</strong></td>
+                        <td id="sessLastAccess"></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Number of Visits (Hits):</strong></td>
+                        <td><strong style="color:#facc15; font-size:18px;" id="hitCount">1</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Active User:</strong></td>
+                        <td id="sessUser" style="color:#86efac; font-weight:bold;">Arun Kumar (CS101)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
+                <button onclick="refreshSession()" class="btn-primary" style="width:auto; padding:9px 18px; font-size:13.5px;">🔄 Refresh / Send Request (Visit +1)</button>
+                <button onclick="switchUserPrompt()" class="btn-primary" style="width:auto; padding:9px 18px; font-size:13.5px; background:#0284c7;">👤 Set User Attribute</button>
+                <button onclick="invalidateSession()" class="btn-primary" style="width:auto; padding:9px 18px; font-size:13.5px; background:linear-gradient(180deg,#dc2626,#991b1b);">🚫 Invalidate Session (Logout)</button>
+            </div>
+        </div>
+
+        <div class="action-row" style="margin-top: 24px;">
+            <a href="index.html" class="btn-back">&larr; Back to Dashboard</a>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        // Exercise 1: Form to Servlet Submission Handler
+        function handleServletSubmit(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('sName').value.trim();
+            const roll = document.getElementById('sRoll').value.trim();
+            const dept = document.getElementById('sDept').value;
+            const email = document.getElementById('sEmail').value.trim();
+            const mobile = document.getElementById('sMobile').value.trim();
+
+            document.getElementById('resCardName').textContent = name;
+            document.getElementById('resCardRoll').textContent = roll;
+            document.getElementById('resCardDept').textContent = dept;
+            document.getElementById('resCardEmail').textContent = email;
+            document.getElementById('resCardMobile').textContent = mobile;
+
+            // Also register student in system
+            let students = getStudents();
+            const exists = students.some(s => s.roll === roll);
+            if (!exists) {
+                students.push({
+                    id: Date.now(),
+                    name: name,
+                    roll: roll,
+                    dept: dept,
+                    mobile: mobile,
+                    email: email,
+                    password: '••••••',
+                    confirmPassword: '••••••',
+                    dateTime: formatCurrentDateTime()
+                });
+                saveStudents(students);
+            }
+
+            // Show confirmation card
+            const outputBox = document.getElementById('servletOutput');
+            outputBox.style.display = 'block';
+            outputBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+            outputBox.style.display = 'block';
+            outputBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Exercise 2: Session Tracking Logic
+        let visits = parseInt(sessionStorage.getItem('lab_visit_count') || '1');
+        let sessionCreated = sessionStorage.getItem('lab_session_created') || new Date().toLocaleString();
+        let sessionUser = sessionStorage.getItem('lab_session_user') || 'Arun Kumar (CS101)';
+        let sessId = sessionStorage.getItem('lab_session_id') || 'JSESSIONID_' + Math.random().toString(36).substring(2, 12).toUpperCase();
+
+        sessionStorage.setItem('lab_visit_count', visits);
+        sessionStorage.setItem('lab_session_created', sessionCreated);
+        sessionStorage.setItem('lab_session_user', sessionUser);
+        sessionStorage.setItem('lab_session_id', sessId);
+
+        function updateSessionUI() {
+            document.getElementById('hitCount').textContent = visits;
+            document.getElementById('sessTime').textContent = sessionCreated;
+            document.getElementById('sessLastAccess').textContent = new Date().toLocaleTimeString();
+            document.getElementById('sessUser').textContent = sessionUser;
+            document.getElementById('sessId').textContent = sessId;
+            document.getElementById('sessHeading').textContent = visits === 1 ? "Welcome! New Session Created" : "Welcome Back! Existing Session Found";
+        }
+
+        function refreshSession() {
+            visits++;
+            sessionStorage.setItem('lab_visit_count', visits);
+            updateSessionUI();
+        }
+
+        function switchUserPrompt() {
+            const newUser = prompt("Enter Student Username to store in session (session.setAttribute('username', ...)):", sessionUser);
+            if (newUser && newUser.trim()) {
+                sessionUser = newUser.trim();
+                sessionStorage.setItem('lab_session_user', sessionUser);
+                updateSessionUI();
+            }
+        }
+
+        function invalidateSession() {
+            sessionStorage.clear();
+            visits = 1;
+            sessionCreated = new Date().toLocaleString();
+            sessId = 'JSESSIONID_' + Math.random().toString(36).substring(2, 12).toUpperCase();
+            sessionStorage.setItem('lab_visit_count', visits);
+            sessionStorage.setItem('lab_session_created', sessionCreated);
+            sessionStorage.setItem('lab_session_id', sessId);
+            updateSessionUI();
+            alert("session.invalidate() called! Session destroyed and a new session has been initialized.");
+        }
+
+        updateSessionUI();
+    </script>
+</body>
+</html>

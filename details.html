@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registered Student Details - Student Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="justify-content: flex-start; padding: 30px 16px;">
+
+    <div class="details-container">
+        <!-- Top Navigation Bar & Title -->
+        <div class="details-topbar">
+            <!-- Graduation Cap Logo -->
+            <div class="logo-container">
+                <svg class="logo-cap" viewBox="0 0 100 80">
+                    <polygon points="50,12 92,30 50,46 8,30" fill="#3b82f6" />
+                    <polygon points="50,16 88,30 50,43 12,30" fill="#60a5fa" opacity="0.6"/>
+                    <path d="M26 38 V50 C26 58 74 58 74 50 V38" fill="#1d4ed8"/>
+                    <circle cx="50" cy="29" r="3.5" fill="#facc15"/>
+                    <path d="M50 29 Q72 32 75 44" stroke="#facc15" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <rect x="73" y="44" width="4.5" height="9" rx="1.5" fill="#facc15"/>
+                </svg>
+            </div>
+
+            <h1 class="title-yellow">Student Management</h1>
+            <h2 class="subtitle-white">Registered Student Details</h2>
+
+            <!-- Top Action Buttons: Back to Home & Registration side-by-side -->
+            <div class="top-nav-actions" style="display: flex; gap: 10px; align-items: center; justify-content: center; margin-top: 16px;">
+                <a href="index.html" class="btn-back" style="padding: 9px 18px; font-size: 14px;">&larr; Back to Home</a>
+                <a href="register.html" class="btn-reg" style="padding: 9px 18px; font-size: 14px;">+ Student Registration</a>
+            </div>
+        </div>
+
+        <!-- Student Records Table Wrapper -->
+        <div class="table-wrapper">
+            <table class="student-table">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Student Name</th>
+                        <th>Roll Number</th>
+                        <th>Department</th>
+                        <th>Mobile Number</th>
+                        <th>Email</th>
+                        <th>Password</th>
+                        <th>Confirm Password</th>
+                        <th>Date & Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <!-- Populated dynamically via app.js -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Total Count Summary -->
+        <div class="table-footer">
+            Total Registered Students: <span class="count-highlight" id="totalCount">0</span>
+        </div>
+
+        <!-- Bottom Action Row: Back to Home & Student Registration side-by-side -->
+        <div class="action-row">
+            <a href="index.html" class="btn-back">&larr; Back to Home</a>
+            <a href="register.html" class="btn-reg">+ Student Registration</a>
+        </div>
+    </div>
+
+    <!-- Edit Student Modal -->
+    <div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999; align-items:center; justify-content:center;">
+        <div class="card-box" style="max-width:500px; width:90%; padding:30px; text-align:left;">
+            <h2 class="title-yellow" style="font-size:20px; margin-bottom:16px;">Edit Student Details</h2>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div>
+                        <label style="font-size:12px; font-weight:600;">Student Name</label>
+                        <input type="text" id="editName" class="form-control" required>
+                    </div>
+                    <div>
+                        <label style="font-size:12px; font-weight:600;">Roll Number</label>
+                        <input type="text" id="editRoll" class="form-control" required>
+                    </div>
+                    <div>
+                        <label style="font-size:12px; font-weight:600;">Department</label>
+                        <select id="editDept" class="form-control" required>
+                            <option value="CSE">CSE</option>
+                            <option value="ECE">ECE</option>
+                            <option value="IT">IT</option>
+                            <option value="ME">ME</option>
+                            <option value="CE">CE</option>
+                            <option value="EEE">EEE</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:12px; font-weight:600;">Mobile Number</label>
+                        <input type="tel" id="editMobile" class="form-control" required>
+                    </div>
+                    <div>
+                        <label style="font-size:12px; font-weight:600;">Email</label>
+                        <input type="email" id="editEmail" class="form-control" required>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button type="submit" class="btn-primary" style="flex:1;">Save Changes</button>
+                    <button type="button" onclick="closeEditModal()" style="flex:1; background:#475569; color:#fff; border:none; border-radius:8px; cursor:pointer; font-weight:600;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        function renderTable() {
+            const students = getStudents();
+            const tbody = document.getElementById('studentTableBody');
+            const totalCount = document.getElementById('totalCount');
+
+            tbody.innerHTML = '';
+            totalCount.textContent = students.length;
+
+            if (students.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" style="padding: 24px; color: #94a3b8;">No registered students found.</td></tr>`;
+                return;
+            }
+
+            students.forEach((student, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${student.name}</td>
+                    <td>${student.roll}</td>
+                    <td>${student.dept}</td>
+                    <td>${student.mobile}</td>
+                    <td>${student.email}</td>
+                    <td>${student.password || '••••••'}</td>
+                    <td>${student.confirmPassword || '••••••'}</td>
+                    <td style="white-space: pre-line;">${student.dateTime}</td>
+                    <td>
+                        <button class="action-btn action-edit" title="Edit Student" onclick="openEditModal(${student.id})">✏️</button>
+                        <button class="action-btn action-delete" title="Delete Student" onclick="deleteStudentById(${student.id})">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function deleteStudentById(id) {
+            if (confirm("Are you sure you want to delete this student record?")) {
+                let students = getStudents();
+                students = students.filter(s => s.id !== id);
+                saveStudents(students);
+                renderTable();
+            }
+        }
+
+        function openEditModal(id) {
+            const students = getStudents();
+            const student = students.find(s => s.id === id);
+            if (!student) return;
+
+            document.getElementById('editId').value = student.id;
+            document.getElementById('editName').value = student.name;
+            document.getElementById('editRoll').value = student.roll;
+            document.getElementById('editDept').value = student.dept;
+            document.getElementById('editMobile').value = student.mobile;
+            document.getElementById('editEmail').value = student.email;
+
+            const modal = document.getElementById('editModal');
+            modal.style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        document.getElementById('editForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const id = Number(document.getElementById('editId').value);
+            let students = getStudents();
+            const student = students.find(s => s.id === id);
+
+            if (student) {
+                student.name = document.getElementById('editName').value.trim();
+                student.roll = document.getElementById('editRoll').value.trim();
+                student.dept = document.getElementById('editDept').value;
+                student.mobile = document.getElementById('editMobile').value.trim();
+                student.email = document.getElementById('editEmail').value.trim();
+                saveStudents(students);
+                closeEditModal();
+                renderTable();
+            }
+        });
+
+        // Initial render
+        renderTable();
+    </script>
+</body>
+</html>

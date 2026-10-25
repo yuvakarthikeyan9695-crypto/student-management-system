@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #eef7fc;
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(147, 197, 253, 0.35) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(147, 197, 253, 0.4) 0%, transparent 45%),
+                radial-gradient(circle at 95% 5%, rgba(191, 219, 254, 0.3) 0%, transparent 35%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 36px;
+        }
+
+        .main-title {
+            font-size: 38px;
+            font-weight: 800;
+            color: #1e3a8a;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #475569;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .flourish-line {
+            display: inline-block;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6);
+            border-radius: 2px;
+        }
+
+        .flourish-line.right {
+            background: linear-gradient(90deg, #3b82f6, transparent);
+        }
+
+        /* 3x2 Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 960px;
+            width: 100%;
+        }
+
+        @media (max-width: 860px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .main-title {
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .main-title {
+                font-size: 24px;
+            }
+        }
+
+        /* Card Styling */
+        .dashboard-card {
+            border-radius: 20px;
+            padding: 36px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border-width: 2px;
+            border-style: solid;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-icon {
+            width: 96px;
+            height: 96px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s ease;
+        }
+
+        .dashboard-card:hover .card-icon {
+            transform: scale(1.06);
+        }
+
+        .card-title {
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+
+        /* 1. Student Management Card */
+        .card-student {
+            background-color: #f6eeff;
+            border-color: #d8b4fe;
+        }
+        .card-student .card-title {
+            color: #6b21a8;
+        }
+
+        /* 2. Teacher Management Card */
+        .card-teacher {
+            background-color: #eafaf1;
+            border-color: #bbf7d0;
+        }
+        .card-teacher .card-title {
+            color: #15803d;
+        }
+
+        /* 3. Attendance Records Card */
+        .card-attendance {
+            background-color: #fffbeb;
+            border-color: #fde68a;
+        }
+        .card-attendance .card-title {
+            color: #b45309;
+        }
+
+        /* 4. Marks Records Card */
+        .card-marks {
+            background-color: #fff1f2;
+            border-color: #fecdd3;
+        }
+        .card-marks .card-title {
+            color: #be123c;
+        }
+
+        /* 5. Fees Management Card */
+        .card-fees {
+            background-color: #f0fdfa;
+            border-color: #99f6e4;
+        }
+        .card-fees .card-title {
+            color: #0369a1;
+        }
+
+        /* 6. Course Management Card */
+        .card-course {
+            background-color: #faf5ff;
+            border-color: #e9d5ff;
+        }
+        .card-course .card-title {
+            color: #6d28d9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="header-section">
+        <h1 class="main-title">Student Management System</h1>
+        <div class="subtitle-container">
+            <span class="flourish-line"></span>
+            <span>Click any section to view its details</span>
+            <span class="flourish-line right"></span>
+        </div>
+    </header>
+
+    <!-- 6 Interactive Cards Grid -->
+    <main class="cards-grid">
+
+        <!-- 1. Student Management -->
+        <a href="student.html" class="dashboard-card card-student">
+            <div class="card-icon">
+                <svg viewBox="0 0 120 120" width="92" height="92">
+                    <!-- Mortarboard Cap -->
+                    <polygon points="60,16 102,30 60,44 18,30" fill="#1d4ed8"/>
+                    <path d="M38,37 V50 C38,60 82,60 82,50 V37" fill="#1e40af"/>
+                    <circle cx="60" cy="30" r="3" fill="#f59e0b"/>
+                    <path d="M60,30 Q90,34 94,46" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
+                    <circle cx="94" cy="48" r="3.5" fill="#f59e0b"/>
+                    <!-- Student Face -->
+                    <circle cx="60" cy="54" r="16" fill="#fed7aa"/>
+                    <path d="M44 50 C44 42 52 38 60 38 C68 38 76 42 76 50 Z" fill="#334155"/>
+                    <circle cx="55" cy="53" r="2" fill="#334155"/>
+                    <circle cx="65" cy="53" r="2" fill="#334155"/>
+                    <path d="M57 60 Q60 63 63 60" stroke="#e11d48" stroke-width="1.8" fill="none"/>
+                    <!-- Open Blue Book -->
+                    <path d="M26,78 L58,78 L58,106 L26,102 Z" fill="#2563eb"/>
+                    <path d="M62,78 L94,78 L94,102 L62,106 Z" fill="#1d4ed8"/>
+                    <path d="M30,82 L56,82 L56,102 L30,99 Z" fill="#ffffff"/>
+                    <path d="M64,82 L90,82 L90,99 L64,102 Z" fill="#f8fafc"/>
+                    <line x1="34" y1="88" x2="52" y2="88" stroke="#cbd5e1" stroke-width="2"/>
+                    <line x1="34" y1="94" x2="48" y2="94" stroke="#cbd5e1" stroke-width="2"/>
+                    <line x1="68" y1="88" x2="86" y2="88" stroke="#cbd5e1" stroke-width="2"/>
+                    <line x1="68" y1="94" x2="82" y2="94" stroke="#cbd5e1" stroke-width="2"/>
+                    <!-- Hands -->
+                    <circle cx="26" cy="90" r="5.5" fill="#fed7aa"/>
+                    <circle cx="94" cy="90" r="5.5" fill="#fed7aa"/>
+                </svg>
+            </div>
+            <h2 class="card-title">Student<br>Management</h2>
+        </a>
+
+        <!-- 2. Teacher Management -->
+        <a href="teacher.html" class="dashboard-card card-teacher">
+            <div class="card-icon">
+                <svg viewBox="0 0 120 120" width="92" height="92">
+                    <!-- Presentation Whiteboard -->
+                    <rect x="52" y="24" width="56" height="42" rx="4" fill="#ffffff" stroke="#16a34a" stroke-width="3"/>
+                    <line x1="62" y1="36" x2="84" y2="36" stroke="#86efac" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="62" y1="46" x2="96" y2="46" stroke="#86efac" stroke-width="2.5" stroke-linecap="round"/>
+                    <!-- Pointer stick -->
+                    <line x1="50" y1="56" x2="72" y2="38" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Teacher Head -->
+                    <circle cx="36" cy="34" r="14" fill="#16a34a"/>
+                    <!-- Teacher Body in Green Suit -->
+                    <path d="M18,92 C18,68 26,54 40,54 C54,54 62,68 62,92 Z" fill="#16a34a"/>
+                    <polygon points="36,54 40,68 44,54" fill="#ffffff"/>
+                    <polygon points="39,68 40,80 41,68" fill="#dc2626"/>
+                    <!-- Pointing Arm -->
+                    <path d="M46,60 L54,54" stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h2 class="card-title">Teacher<br>Management</h2>
+        </a>
+
+        <!-- 3. Attendance Records -->
+        <a href="attendance.html" class="dashboard-card card-attendance">
+            <div class="card-icon">
+                <svg viewBox="0 0 120 120" width="92" height="92">
+                    <!-- Clipboard -->
+                    <rect x="30" y="22" width="56" height="76" rx="6" fill="#ffffff" stroke="#f59e0b" stroke-width="3.5"/>
+                    <rect x="46" y="16" width="24" height="10" rx="3" fill="#f59e0b"/>
+                    <!-- Checklist Checkmarks -->
+                    <polyline points="40,42 44,46 52,38" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <line x1="56" y1="42" x2="74" y2="42" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/>
+                    <polyline points="40,56 44,60 52,52" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <line x1="56" y1="56" x2="74" y2="56" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/>
+                    <polyline points="40,70 44,74 52,66" stroke="#f59e0b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <line x1="56" y1="70" x2="68" y2="70" stroke="#cbd5e1" stroke-width="3" stroke-linecap="round"/>
+                    <!-- Clock Badge -->
+                    <circle cx="78" cy="78" r="18" fill="#ffffff" stroke="#ea580c" stroke-width="3.5"/>
+                    <polyline points="78,68 78,78 86,78" stroke="#ea580c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                </svg>
+            </div>
+            <h2 class="card-title">Attendance<br>Records</h2>
+        </a>
+
+        <!-- 4. Marks Records -->
+        <a href="marks.html" class="dashboard-card card-marks">
+            <div class="card-icon">
+                <svg viewBox="0 0 120 120" width="92" height="92">
+                    <!-- Paper sheet with folded top corner -->
+                    <path d="M34,20 H74 L90,36 V96 C90,100 86,104 82,104 H34 C30,104 26,100 26,96 V28 C26,24 30,20 34,20 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="3"/>
+                    <polygon points="74,20 90,36 74,36" fill="#fecdd3"/>
+                    <!-- Red A+ Stamp -->
+                    <text x="46" y="52" font-family="-apple-system, Arial, sans-serif" font-weight="900" font-size="24" fill="#e11d48">A+</text>
+                    <line x1="42" y1="62" x2="76" y2="62" stroke="#e11d48" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="42" y1="74" x2="76" y2="74" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="42" y1="84" x2="68" y2="84" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h2 class="card-title">Marks<br>Records</h2>
+        </a>
+
+        <!-- 5. Fees Management -->
+        <a href="fees.html" class="dashboard-card card-fees">
+            <div class="card-icon">
+                <svg viewBox="0 0 120 120" width="92" height="92">
+                    <!-- Coin with Dollar Sign -->
+                    <circle cx="66" cy="42" r="20" fill="#ffffff" stroke="#0284c7" stroke-width="3.5"/>
+                    <text x="66" y="50" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="22" fill="#0284c7" text-anchor="middle">$</text>
+                    <!-- Hand Palm -->
+                    <path d="M26,76 C32,76 38,80 46,80 L74,80 C80,80 86,76 90,72 L96,76 C90,86 80,92 70,92 L46,92 C40,92 32,86 26,80 Z" fill="#0284c7"/>
+                    <rect x="20" y="70" width="12" height="20" rx="3" fill="#0369a1"/>
+                </svg>
+            </div>
+            <h2 class="card-title">Fees<br>Management</h2>
+        </a>
+
+        <!-- 6. Course Management -->
+        <a href="courses.html" class="dashboard-card card-course">
+            <div class="card-icon">
+                <svg viewBox="0 0 120 120" width="92" height="92">
+                    <!-- Purple Hardcover Book -->
+                    <rect x="36" y="22" width="52" height="76" rx="6" fill="#7e22ce" stroke="#6b21a8" stroke-width="3"/>
+                    <rect x="32" y="22" width="10" height="76" rx="3" fill="#581c87"/>
+                    <!-- White Label -->
+                    <rect x="52" y="36" width="26" height="18" rx="3" fill="#ffffff"/>
+                    <!-- Bookmark Ribbon -->
+                    <polygon points="46,92 54,92 50,102" fill="#ef4444"/>
+                    <polygon points="36,92 88,92 88,98 36,98" fill="#f8fafc"/>
+                </svg>
+            </div>
+            <h2 class="card-title">Course<br>Management</h2>
+        </a>
+
+    </main>
+
+    <!-- Lab Modules Quick Bar (Java Servlets, JSP & XML) -->
+    <footer style="margin-top: 36px; text-align: center; max-width: 960px; width: 100%;">
+        <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); border: 1.5px solid #bfdbfe; border-radius: 16px; padding: 18px 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+            <div style="text-align: left;">
+                <div style="font-weight: 700; color: #1e3a8a; font-size: 15px;">🎓 Web Technology &amp; Java Lab Suite</div>
+                <div style="font-size: 12.5px; color: #64748b;">Servlets &bull; Session Tracking &bull; JSP 3-Tier &bull; Online Exam &bull; XML/XSLT</div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="exam.html" style="padding: 8px 16px; background: #e0f2fe; color: #0369a1; border-radius: 8px; font-weight: 600; font-size: 13.5px; text-decoration: none;">📝 Online Exam</a>
+                <a href="xml_view.html" style="padding: 8px 16px; background: #f3e8ff; color: #6b21a8; border-radius: 8px; font-weight: 600; font-size: 13.5px; text-decoration: none;">📄 XML &amp; XSLT</a>
+                <a href="servlet_demo.html" style="padding: 8px 16px; background: #dcfce7; color: #15803d; border-radius: 8px; font-weight: 600; font-size: 13.5px; text-decoration: none;">🧪 Servlets &amp; Session</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Seed sample data in localStorage -->
+    <script src="app.js"></script>
+    <script>
+        getStudents();
+    </script>
+</body>
+</html>

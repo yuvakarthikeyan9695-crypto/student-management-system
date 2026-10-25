@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="student_style.xsl"?>
+<students xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="student_schema.xsd">
+
+    <student>
+        <rollNo>CS101</rollNo>
+        <name>Arun Kumar</name>
+        <department>CSE</department>
+        <mobile>9876543210</mobile>
+        <email>arun@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">92</subject>
+            <subject name="Operating Systems">88</subject>
+            <subject name="Web Technology">95</subject>
+            <subject name="Database Systems">90</subject>
+        </marks>
+        <total>365</total>
+        <percentage>91.25</percentage>
+        <result>PASS</result>
+    </student>
+
+    <student>
+        <rollNo>EC102</rollNo>
+        <name>Priya Sharma</name>
+        <department>ECE</department>
+        <mobile>9123456780</mobile>
+        <email>priya@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">85</subject>
+            <subject name="Operating Systems">82</subject>
+            <subject name="Web Technology">89</subject>
+            <subject name="Database Systems">78</subject>
+        </marks>
+        <total>334</total>
+        <percentage>83.50</percentage>
+        <result>PASS</result>
+    </student>
+
+    <student>
+        <rollNo>IT103</rollNo>
+        <name>Karthik Rajan</name>
+        <department>IT</department>
+        <mobile>9988776655</mobile>
+        <email>karthik@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">96</subject>
+            <subject name="Operating Systems">94</subject>
+            <subject name="Web Technology">98</subject>
+            <subject name="Database Systems">95</subject>
+        </marks>
+        <total>383</total>
+        <percentage>95.75</percentage>
+        <result>PASS</result>
+    </student>
+
+    <student>
+        <rollNo>ME104</rollNo>
+        <name>Sneha Patel</name>
+        <department>ME</department>
+        <mobile>9876501234</mobile>
+        <email>sneha@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">76</subject>
+            <subject name="Operating Systems">70</subject>
+            <subject name="Web Technology">80</subject>
+            <subject name="Database Systems">74</subject>
+        </marks>
+        <total>300</total>
+        <percentage>75.00</percentage>
+        <result>PASS</result>
+    </student>
+
+    <student>
+        <rollNo>CE105</rollNo>
+        <name>Vivek Nair</name>
+        <department>CE</department>
+        <mobile>9876598765</mobile>
+        <email>vivek@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">88</subject>
+            <subject name="Operating Systems">91</subject>
+            <subject name="Web Technology">87</subject>
+            <subject name="Database Systems">90</subject>
+        </marks>
+        <total>356</total>
+        <percentage>89.00</percentage>
+        <result>PASS</result>
+    </student>
+
+</students>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML, Schema (XSD) & XSLT Transformation - Student Management</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .xml-container { max-width: 1040px; width: 100%; margin: 30px auto; padding: 32px; }
+        .tab-buttons { display: flex; justify-content: center; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 18px; border: 1.5px solid #3b82f6; background: rgba(59,130,246,0.15); color: #fff; font-weight: 600; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 13.5px; }
+        .tab-btn.active { background: #1d72f2; border-color: #1d72f2; box-shadow: 0 4px 14px rgba(29,114,242,0.4); }
+        .code-display { background: #03112b; border: 1.5px solid rgba(59,130,246,0.3); border-radius: 12px; padding: 22px; text-align: left; font-family: 'Consolas', 'Courier New', monospace; font-size: 13px; line-height: 1.5; color: #a5f3fc; overflow-x: auto; max-height: 520px; white-space: pre-wrap; word-break: break-all; }
+        
+        /* Rendered Output Table Styling */
+        .preview-card { background: rgba(6,35,84,0.6); border: 1.5px solid rgba(59,130,246,0.35); border-radius: 14px; padding: 24px; }
+        .xslt-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; margin-top: 14px; }
+        .xslt-table th { background: #062354; color: #facc15; padding: 12px 10px; border: 1px solid rgba(59,130,246,0.3); }
+        .xslt-table td { padding: 11px 10px; border: 1px solid rgba(59,130,246,0.2); background: rgba(8,30,68,0.5); color: #e2e8f0; }
+        .xslt-table tr:hover td { background: rgba(29,114,242,0.2); }
+        .tag-pass { background: rgba(34,197,94,0.2); color: #86efac; border: 1px solid #22c55e; padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
+        .tag-fail { background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid #ef4444; padding: 3px 10px; border-radius: 12px; font-weight: 700; font-size: 12px; }
+    </style>
+</head>
+<body style="justify-content: flex-start;">
+
+    <main class="card-box xml-container">
+        <!-- Logo -->
+        <div class="logo-container">
+            <svg class="logo-cap" viewBox="0 0 100 80">
+                <polygon points="50,12 92,30 50,46 8,30" fill="#3b82f6" />
+                <polygon points="50,16 88,30 50,43 12,30" fill="#60a5fa" opacity="0.6"/>
+                <path d="M26 38 V50 C26 58 74 58 74 50 V38" fill="#1d4ed8"/>
+                <circle cx="50" cy="29" r="3.5" fill="#facc15"/>
+                <path d="M50 29 Q72 32 75 44" stroke="#facc15" stroke-width="2.5" fill="none"/>
+                <rect x="73" y="44" width="4.5" height="9" rx="1.5" fill="#facc15"/>
+            </svg>
+        </div>
+
+        <h1 class="title-yellow">XML &bull; Schema (XSD) &bull; XSLT/XSL</h1>
+        <h2 class="subtitle-white">Student Mark List Transformation</h2>
+        <div class="yellow-divider-small"></div>
+
+        <!-- Navigation Tabs -->
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('preview', this)">1. Live XSLT Transformed Marksheet</button>
+            <button class="tab-btn" onclick="switchTab('xml', this)">2. XML Source (students.xml)</button>
+            <button class="tab-btn" onclick="switchTab('xsd', this)">3. Schema Definition (student_schema.xsd)</button>
+            <button class="tab-btn" onclick="switchTab('xsl', this)">4. XSLT Stylesheet (student_style.xsl)</button>
+        </div>
+
+        <!-- Tab 1: Live Rendered Output -->
+        <div id="tab-preview" class="preview-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                <h3 style="color:#facc15; font-size:17px;">Transformed Mark List (Rendered via XSLT Template)</h3>
+                <span style="font-size:12.5px; color:#86efac; background:rgba(34,197,94,0.15); padding:4px 10px; border-radius:6px; border:1px solid #22c55e;">XML &rarr; XSLT Processor Active</span>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table class="xslt-table" id="renderedTable">
+                    <thead>
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Student Name</th>
+                            <th>Department</th>
+                            <th>Networks</th>
+                            <th>OS</th>
+                            <th>Web Tech</th>
+                            <th>DBMS</th>
+                            <th>Total (/400)</th>
+                            <th>Percentage</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="xsltTableBody">
+                        <!-- Transformed data populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 2: XML Source -->
+        <div id="tab-xml" style="display:none;">
+            <pre class="code-display" id="xmlCodeDisplay"></pre>
+        </div>
+
+        <!-- Tab 3: XSD Schema -->
+        <div id="tab-xsd" style="display:none;">
+            <pre class="code-display" id="xsdCodeDisplay"></pre>
+        </div>
+
+        <!-- Tab 4: XSLT Stylesheet -->
+        <div id="tab-xsl" style="display:none;">
+            <pre class="code-display" id="xslCodeDisplay"></pre>
+        </div>
+
+        <div class="action-row" style="margin-top: 24px;">
+            <a href="index.html" class="btn-back">&larr; Back to Dashboard</a>
+            <a href="students.xml" target="_blank" class="btn-reg">Open Raw XML in Browser &rarr;</a>
+        </div>
+    </main>
+
+    <script>
+        // Embedded XML Data for 100% offline & local file:// support
+        const XML_STRING = `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="student_style.xsl"?>
+<students xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="student_schema.xsd">
+
+    <student>
+        <rollNo>CS101</rollNo>
+        <name>Arun Kumar</name>
+        <department>CSE</department>
+        <mobile>9876543210</mobile>
+        <email>arun@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">92</subject>
+            <subject name="Operating Systems">88</subject>
+            <subject name="Web Technology">95</subject>
+            <subject name="Database Systems">90</subject>
+        </marks>
+        <total>365</total>
+        <percentage>91.25</percentage>
+        <result>PASS</result>
+    </student>
+
+    <student>
+        <rollNo>EC102</rollNo>
+        <name>Priya Sharma</name>
+        <department>ECE</department>
+        <mobile>9123456780</mobile>
+        <email>priya@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">85</subject>
+            <subject name="Operating Systems">82</subject>
+            <subject name="Web Technology">89</subject>
+            <subject name="Database Systems">78</subject>
+        </marks>
+        <total>334</total>
+        <percentage>83.50</percentage>
+        <result>PASS</result>
+    </student>
+
+    <student>
+        <rollNo>IT103</rollNo>
+        <name>Karthik Rajan</name>
+        <department>IT</department>
+        <mobile>9988776655</mobile>
+        <email>karthik@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">96</subject>
+            <subject name="Operating Systems">94</subject>
+            <subject name="Web Technology">98</subject>
+            <subject name="Database Systems">95</subject>
+        </marks>
+        <total>383</total>
+        <percentage>95.75</percentage>
+        <result>PASS</result>
+    </student>
+
+    <student>
+        <rollNo>ME104</rollNo>
+        <name>Sneha Patel</name>
+        <department>ME</department>
+        <mobile>9876501234</mobile>
+        <email>sneha@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">76</subject>
+            <subject name="Operating Systems">70</subject>
+            <subject name="Web Technology">80</subject>
+            <subject name="Database Systems">74</subject>
+        </marks>
+        <total>300</total>
+        <percentage>75.00</percentage>
+        <result>PASS</result>
+    </student>
+
+    <student>
+        <rollNo>CE105</rollNo>
+        <name>Vivek Nair</name>
+        <department>CE</department>
+        <mobile>9876598765</mobile>
+        <email>vivek@college.edu</email>
+        <marks>
+            <subject name="Computer Networks">88</subject>
+            <subject name="Operating Systems">91</subject>
+            <subject name="Web Technology">87</subject>
+            <subject name="Database Systems">90</subject>
+        </marks>
+        <total>356</total>
+        <percentage>89.00</percentage>
+        <result>PASS</result>
+    </student>
+
+</students>`;
+
+        const XSD_STRING = `<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="students">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="student" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="rollNo" type="xs:string"/>
+                            <xs:element name="name" type="xs:string"/>
+                            <xs:element name="department" type="xs:string"/>
+                            <xs:element name="mobile">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:pattern value="[0-9]{10}"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="email" type="xs:string"/>
+                            <xs:element name="marks">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="subject" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:simpleContent>
+                                                    <xs:extension base="xs:integer">
+                                                        <xs:attribute name="name" type="xs:string" use="required"/>
+                                                    </xs:extension>
+                                                </xs:simpleContent>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="total" type="xs:integer"/>
+                            <xs:element name="percentage" type="xs:decimal"/>
+                            <xs:element name="result" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>`;
+
+        const XSL_STRING = `<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<xsl:template match="/">
+    <!-- Transformed HTML Table Structure -->
+    <xsl:for-each select="students/student">
+        <tr>
+            <td><xsl:value-of select="rollNo"/></td>
+            <td><xsl:value-of select="name"/></td>
+            <td><xsl:value-of select="department"/></td>
+            <td><xsl:value-of select="marks/subject[1]"/></td>
+            <td><xsl:value-of select="marks/subject[2]"/></td>
+            <td><xsl:value-of select="marks/subject[3]"/></td>
+            <td><xsl:value-of select="marks/subject[4]"/></td>
+            <td><xsl:value-of select="total"/></td>
+            <td><xsl:value-of select="percentage"/>%</td>
+            <td><xsl:value-of select="result"/></td>
+        </tr>
+    </xsl:for-each>
+</xsl:template>
+</xsl:stylesheet>`;
+
+        // Populate Source Display
+        document.getElementById('xmlCodeDisplay').textContent = XML_STRING;
+        document.getElementById('xsdCodeDisplay').textContent = XSD_STRING;
+        document.getElementById('xslCodeDisplay').textContent = XSL_STRING;
+
+        // Parse XML and populate Rendered Table (Guaranteed to work in file:/// and http://)
+        function renderXmlTable() {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(XML_STRING, "text/xml");
+            const students = xmlDoc.getElementsByTagName("student");
+            const tbody = document.getElementById("xsltTableBody");
+            tbody.innerHTML = "";
+
+            for (let i = 0; i < students.length; i++) {
+                const s = students[i];
+                const roll = s.getElementsByTagName("rollNo")[0]?.textContent || "";
+                const name = s.getElementsByTagName("name")[0]?.textContent || "";
+                const dept = s.getElementsByTagName("department")[0]?.textContent || "";
+                const subjects = s.getElementsByTagName("subject");
+                const m1 = subjects[0]?.textContent || "-";
+                const m2 = subjects[1]?.textContent || "-";
+                const m3 = subjects[2]?.textContent || "-";
+                const m4 = subjects[3]?.textContent || "-";
+                const total = s.getElementsByTagName("total")[0]?.textContent || "-";
+                const pct = s.getElementsByTagName("percentage")[0]?.textContent || "-";
+                const res = s.getElementsByTagName("result")[0]?.textContent || "PASS";
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${roll}</strong></td>
+                    <td>${name}</td>
+                    <td>${dept}</td>
+                    <td>${m1}</td>
+                    <td>${m2}</td>
+                    <td>${m3}</td>
+                    <td>${m4}</td>
+                    <td><strong style="color:#facc15;">${total}</strong></td>
+                    <td>${pct}%</td>
+                    <td><span class="${res === 'PASS' ? 'tag-pass' : 'tag-fail'}">${res}</span></td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        renderXmlTable();
+
+        function switchTab(tabId, el) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            ['preview', 'xml', 'xsd', 'xsl'].forEach(t => {
+                const dom = document.getElementById('tab-' + t);
+                if (dom) dom.style.display = (t === tabId) ? 'block' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>
